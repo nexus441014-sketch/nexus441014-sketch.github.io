@@ -61,6 +61,21 @@ Then run `./publish.sh`.
 Nothing is committed unless the build and all checks pass, and nothing is published
 unless `--push` is passed. The default run is a dry run.
 
+### First push: GitHub authentication
+
+This Mac has no GitHub credentials stored, so the very first `--push` has to be done
+by hand once. GitHub does not accept account passwords over HTTPS — it needs a
+personal access token:
+
+1. Create a token at <https://github.com/settings/tokens> (Tokens (classic) → Generate
+   new token, scope `repo`), or a fine-grained token with Contents: Read and write on
+   `nexus441014-sketch.github.io`. Copy it; it is shown only once.
+2. Run `git push origin HEAD` in this folder. When prompted, enter the GitHub username
+   as the username and paste the token as the password.
+
+`credential.helper` is set to `osxkeychain` for this repository, so the token is stored
+in the macOS Keychain and `./publish.sh --push` works unattended from then on.
+
 ### What the build generates
 
 `tools/build.py` writes, every run:
