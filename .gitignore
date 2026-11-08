@@ -1,0 +1,27 @@
+# This repository IS the public website: every committed file is served at
+# https://nexus441014-sketch.github.io/<path>. The build inputs and the
+# monitoring data therefore stay local, and are not published.
+
+# Markdown sources (publishing them would duplicate every article at a .md URL)
+content/
+
+# Build and check scripts
+tools/
+
+# Monitored source list and page snapshots (third-party page text)
+offers/
+
+# Generated monitor reports
+reports/
+
+# Scratch
+work/
+
+*.bak
+.DS_Store
+
+# The publish helper itself does not belong on the website
+publish.sh
+
+# Local preview config
+.claude/
