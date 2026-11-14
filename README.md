@@ -1,16 +1,30 @@
-# WorkflowPilot Lab
+# WorkflowPilot Lab + Japan Explained
 
-English-language affiliate content site for freelancers and solo business owners,
-published with GitHub Pages at <https://nexus441014-sketch.github.io/>.
+Two English-language affiliate content sites, both published with GitHub Pages from this
+one repository.
+
+| Site | URL | Audience | Sources |
+| --- | --- | --- | --- |
+| WorkflowPilot Lab | `/` | Freelancers and solo business owners | `content/` |
+| Japan Explained | `/japan/` | First-time visitors to Japan | `content-japan/`, `pages-japan/` |
+
+GitHub Pages allows only one user site per account, so the second site lives in a
+subdirectory of the same domain rather than on its own hostname.
 
 **This repository is the live website.** Every committed file is served at
 `https://nexus441014-sketch.github.io/<path>`. The build inputs, the scripts and the
 monitoring data are deliberately kept out of the repository (see `.gitignore`) so
-they are not published.
+they are not published — publishing `content/` would duplicate every article at a `.md`
+URL and hand search engines two copies of the same text.
+
+Each site has its own name, navigation, hero copy and static pages, defined in the
+`SITES` list at the top of `tools/build.py`. Adding a third site means adding one entry
+there plus a content folder. Both sites share `assets/style.css` and one `sitemap.xml`
+at the domain root, because Search Console treats the whole domain as a single property.
 
 ## Write an article
 
-Create one Markdown file in `content/`:
+Create one Markdown file in `content/` (site 1) or `content-japan/` (site 2):
 
 ```
 ---
@@ -88,18 +102,25 @@ key — do not copy the private key around.
 
 ### What the build generates
 
-`tools/build.py` writes, every run:
+`tools/build.py` builds every site in `SITES` on each run and writes:
 
-- `articles/<slug>.html` for each file in `content/`, with canonical URL, Open Graph
-  tags, `Article` JSON-LD, a table of contents for longer pieces, an affiliate
-  disclosure box above the body, and "Keep reading" internal links
-- `index.html` and `guides.html`
-- `sitemap.xml` and a `robots.txt` that points to it
-- the shared navigation and the canonical/Open Graph tags on `about.html`,
-  `contact.html`, `privacy.html` and `disclosure.html`
+- `articles/<slug>.html` per source file, with canonical URL, Open Graph tags,
+  `Article` JSON-LD, a table of contents for longer pieces, an affiliate disclosure box
+  above the body, and "Keep reading" internal links
+- `index.html` and `guides.html` for each site
+- site 2's static pages from `pages-japan/`
+- one `sitemap.xml` at the domain root covering both sites, and a `robots.txt`
+  pointing to it
+- site 1's hand-written `about.html`, `contact.html`, `privacy.html` and
+  `disclosure.html` get their navigation and canonical/Open Graph tags refreshed in
+  place; their body text is still edited by hand
 
-Generated files are never edited by hand: the next build overwrites them. Edit
-`content/` instead.
+Root-relative links inside site 2's Markdown are rewritten with the `/japan` prefix
+automatically, so write `/articles/foo.html` and the build produces
+`/japan/articles/foo.html`.
+
+Generated files are never edited by hand: the next build overwrites them. Edit the
+Markdown sources instead.
 
 ### What the checks cover
 
