@@ -4,6 +4,8 @@
 
 # Markdown sources (publishing them would duplicate every article at a .md URL)
 content/
+content-japan/
+pages-japan/
 
 # Build and check scripts
 tools/
