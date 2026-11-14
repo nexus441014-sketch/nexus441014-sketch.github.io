@@ -61,20 +61,30 @@ Then run `./publish.sh`.
 Nothing is committed unless the build and all checks pass, and nothing is published
 unless `--push` is passed. The default run is a dry run.
 
-### First push: GitHub authentication
+### How pushing is authenticated
 
-This Mac has no GitHub credentials stored, so the very first `--push` has to be done
-by hand once. GitHub does not accept account passwords over HTTPS — it needs a
-personal access token:
+Pushing uses an SSH deploy key, set up on 2026-11-14. There is no token to paste and
+nothing expires:
 
-1. Create a token at <https://github.com/settings/tokens> (Tokens (classic) → Generate
-   new token, scope `repo`), or a fine-grained token with Contents: Read and write on
-   `nexus441014-sketch.github.io`. Copy it; it is shown only once.
-2. Run `git push origin HEAD` in this folder. When prompted, enter the GitHub username
-   as the username and paste the token as the password.
+- Private key: `~/.ssh/workflowpilot_deploy` (stays on this Mac, no passphrase)
+- Public key: registered as a deploy key named "workflowpilot-lab Mac" on
+  `nexus441014-sketch/nexus441014-sketch.github.io`, with write access
+- The remote is `git@github.com:nexus441014-sketch/nexus441014-sketch.github.io.git`
+- `git config core.sshCommand` in this repository points git at that key
 
-`credential.helper` is set to `osxkeychain` for this repository, so the token is stored
-in the macOS Keychain and `./publish.sh --push` works unattended from then on.
+The deploy key works on this one repository only, so it cannot touch anything else in
+the account. Personal access tokens are no longer used; any that still exist can be
+deleted.
+
+If pushing ever stops working, check in this order: the key file still exists, the
+deploy key is still listed at
+<https://github.com/nexus441014-sketch/nexus441014-sketch.github.io/settings/keys>
+with "Read/write", and `git remote -v` still shows the `git@github.com:` form.
+`ssh -i ~/.ssh/workflowpilot_deploy -T git@github.com` prints a confirmation line when
+the key is accepted.
+
+To move this to another machine, generate a new key there and add it as a second deploy
+key — do not copy the private key around.
 
 ### What the build generates
 
